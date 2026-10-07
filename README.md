@@ -1,2 +1,3 @@
 # VideoRepairMac-RIFE
-A Free Tool to repair black Frames in a Videoclip - RIFE or Optical Flow
+A Free Tool to repair black Frames in a long Videoclip - RIFE or Optical Flow
+MXF Support, Audio is kept
