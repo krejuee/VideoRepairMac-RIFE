@@ -4,20 +4,24 @@ Lokale macOS-App zum Erkennen, Prüfen und Reparieren schwarzer Bildlücken mit
 RIFE, Optical Flow und weiteren Methoden. Projekt: **krejuee**, mit Unterstützung
 von ChatGPT/Codex entwickelt.
 
-**Aktuell: Version 8** – mit Lücken bis **2 Sekunden**, Deutsch/Englisch,
+**Aktuell: Version 9** – mit Lücken bis **2 Sekunden**, Deutsch/Englisch,
 **8-/10-Bit-SDR** und fortsetzbarem Gesamtexport. Quellcode, Modell und Tests
-im Hauptordner stammen aus dem beigefügten V8-Paket.
+im Hauptordner sind der aktuelle V9-Stand.
+
+**Neu:** ProRes/MOV ist der Standardexport. Nach „Alle Prüfclips rendern“ wird
+die Gesamtdatei standardmäßig ohne Rückfrage erstellt. „Titel erhalten“ wurde
+entfernt; die Erkennung von Titeln über Schwarz bleibt erhalten.
 
 [English documentation](README_EN.md) · [Deutsche Anleitung](LIESMICH.md)
 
 ## Download und Installation
 
-1. [VideoRepairMac-RIFE-v8.zip herunterladen](https://github.com/krejuee/VideoRepairMac-RIFE/releases/download/v8.0.0/VideoRepairMac-RIFE-v8.zip)
+1. [VideoRepairMac-RIFE-v9.zip herunterladen](https://github.com/krejuee/VideoRepairMac-RIFE/releases/download/v9.0.0/VideoRepairMac-RIFE-v9.zip)
    und entpacken. Ältere ZIPs bleiben als Archiv verfügbar.
 2. Python **3.12 oder 3.11** für macOS installieren:
    [python.org](https://www.python.org/downloads/macos/).
 3. **Installieren.command** öffnen. Die Pakete werden heruntergeladen und
-   `~/Applications/Video Repair RIFE 8.app` wird erstellt.
+   `~/Applications/Video Repair RIFE 9.app` wird erstellt.
 
 Voraussetzungen: macOS 14+, Intel oder Apple Silicon, Internet zur Installation,
 etwa 4 GB für den Build und zusätzlicher Platz für Videos und Prüfclips.
@@ -35,7 +39,7 @@ Originalvorschau; Typ, Framebereich und Methode sind pro Ereignis einstellbar.
 
 Abbildung: synthetischer Democlip in der Linux-Testumgebung.
 
-## Funktionen in V8
+## Funktionen in V9
 
 - Ereignisliste für Lücken, Schnitte, Schnitt mit schwarzer Lücke und Blenden.
 - Bildweise Vorschau, Ereignisnavigation, Wiedergabe und Tastenkürzel; **L** setzt
@@ -56,6 +60,14 @@ Abbildung: synthetischer Democlip in der Linux-Testumgebung.
   Metadaten werden übernommen, weitere lesbare Tags im Bericht abgelegt.
 - Fortschrittsanzeige und Abbruch. Originaldateien bleiben unverändert.
 
+Für einen Lauf über Nacht: Datei laden, scannen, Einstellungen/Plan prüfen,
+**„Gesamtdatei nach Prüfclips automatisch erstellen“** aktiv lassen und
+**„Alle Prüfclips rendern“** starten. Ist der Schalter aus, fragt die App vor
+dem Gesamtexport nach. Einzelne Prüfclips starten keinen Gesamtexport.
+
+MKV bleibt optional verfügbar; das gemeldete Wiedergabeproblem wurde bisher
+nicht abschließend geklärt.
+
 ## Was ist RIFE?
 
 RIFE ist ein neuronales Verfahren zur Zwischenbildberechnung. Aus intakten
@@ -68,7 +80,7 @@ Schnitt-Lücken verwenden eine separate Bewegungsprognose.
 ## Dokumentation und Entwicklung
 
 - [Ausführliche Anleitung und Tastenkürzel](LIESMICH.md)
-- [Prüfbericht des V8-Pakets](PRUEFUNG.md) und [aktueller Import-Testlauf](REPOSITORY_CHECKS.md)
+- [Prüfbericht des V9-Pakets](PRUEFUNG.md) und [aktueller Import-Testlauf](REPOSITORY_CHECKS.md)
 - [Versionsübersicht](CHANGELOG.md)
 - [Beiträge und Fehlerberichte](CONTRIBUTING.md)
 - [Drittanbieter und Herkunft](THIRD_PARTY_NOTICES.md)

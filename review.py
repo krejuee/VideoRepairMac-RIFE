@@ -33,7 +33,7 @@ def repair_plan(result, gap, mode):
     settings = result.settings or {}
     method = engine.resolved_mode(gap, mode)
     fields = settings.get("interlaced", "off")
-    overlays = gap.overlays if gap.overlays is not None else settings.get("preserve_overlays", True)
+    overlays = False  # Legacy title settings never composite damaged pixels in V9.
     return {"source": result.source, "signature": list(result.signature), "start": gap.start, "end": gap.end,
         "approved": gap.approved, "type": gap.effective_kind, "mode": method,
         "fields": fields, "depth": result.bit_depth,
@@ -150,7 +150,8 @@ def patch_matches(result, gap, mode, artifact, full=False, cancel=lambda: False)
     if not artifact:
         return False
     same_plan = artifact.get("fingerprint") == fingerprint(result, gap, mode)
-    if not same_plan and result.bit_depth == 8:
+    if not same_plan and result.bit_depth == 8 and not (gap.overlays if gap.overlays is not None
+            else result.settings.get("preserve_overlays", False)):
         same_plan = artifact.get("fingerprint") == legacy_fingerprint(result, gap, mode, artifact.get("export"))
     if not same_plan:
         return False
@@ -190,7 +191,7 @@ def preferences(result, output_dir):
 def save_preferences(result, output_dir, mode, export):
     with _index_lock:
         data = read_session(result, output_dir)
-        data["preferences"] = {"settings": result.settings, "mode": mode, "export": export}
+        data["preferences"] = {"settings": result.settings, "mode": mode, "export": export, "preferences_version": 9}
         save_session(result, output_dir, data)
 
 

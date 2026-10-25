@@ -1,3 +1,26 @@
+# Prüfung – Video Repair RIFE 9
+
+Die V9-Tests prüfen insbesondere:
+
+- Vom Prüfclip bis zur vollständigen ProRes/MOV-Datei: Originalton, Bildanzahl
+  und keine Bestätigungsabfrage bei aktiver Automatik.
+- Automatik aus: genau eine Rückfrage; Nein erhält Prüfclips ohne Gesamtdatei.
+  Der Schalterzustand wird beim erneuten Laden wiederhergestellt.
+- Einzelnes Punkt-Rendering startet auch bei aktiver Automatik keinen Master.
+- V8-MKV-Voreinstellungen wechseln einmalig auf ProRes; explizite V9-Auswahl bleibt.
+- Echtes RIFE ersetzt einen nur auf Schwarzframes sichtbaren Titelbereich, auch
+  bei alten Titel-Flags. Die Erkennung bleibt erhalten; alte Compositing-Patches
+  werden nicht als passend akzeptiert.
+
+macOS-Build, Apple-GPU/MPS und Adobe Media Encoder wurden hier nicht ausgeführt.
+Das gemeldete MKV-Wiedergabeproblem ist weiterhin nicht abschließend geklärt;
+ProRes/MOV ist deshalb die neue Voreinstellung. Interne verlustfreie Reparatur-
+Patches bleiben für Wiederverwendung und Wiederaufnahme erhalten.
+
+---
+
+## Historischer Prüfbericht der V8-Basis
+
 # Prüfung – Video Repair RIFE 8
 
 **72 automatisierte Tests bestanden** am 16.10.2026 (63,442 Sekunden).

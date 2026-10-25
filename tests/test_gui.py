@@ -51,6 +51,7 @@ class GuiTests(unittest.TestCase):
             self.assertEqual(window.preview_data.comparison, "original")
             self.assertFalse(window.original_view.pixmap().isNull())
             self.assertTrue(window.repaired_view.pixmap().isNull())
+            window.auto_master.setChecked(False)
             with patch.object(QMessageBox, "question", return_value=QMessageBox.No):
                 window.repair_button.click()
                 self.wait_until(lambda: not window.is_busy() and len(window.artifacts) == 2)
@@ -189,6 +190,7 @@ class GuiTests(unittest.TestCase):
             self.assertIn(review.event_key(first), saved)
             self.assertNotIn(review.event_key(second), saved)
             self.assertTrue(Path(saved[review.event_key(first)]["clip"]).exists())
+            window.auto_master.setChecked(False)
             with patch.object(QMessageBox, "question", return_value=QMessageBox.No):
                 window.render_all_button.click()
                 self.wait_for(window.render_worker)

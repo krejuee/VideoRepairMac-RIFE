@@ -9,3 +9,7 @@ stellt das mitgelieferte RIFE-Modell für den Quellcode bereit.
 
 Für die normale Installation das einzelne ZIP unter
 [Releases](https://github.com/krejuee/VideoRepairMac-RIFE/releases) verwenden.
+
+Ab V9 enthalten diese Teile das unveränderte V8-Basispaket für die
+Modellbereitstellung. `python scripts/build_release.py` baut danach V9 aus dem
+aktuellen Quellcode im Hauptordner.

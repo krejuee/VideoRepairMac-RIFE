@@ -456,12 +456,12 @@ def copy_tags(metadata):
 
 
 def scan(path, max_gap=6, progress=lambda p, s: None, cancel=lambda: False,
-         sensitivity=0, scene_guard=True, interlaced="auto", preserve_overlays=True,
+         sensitivity=0, scene_guard=True, interlaced="auto", preserve_overlays=False,
          color_stabilize=True, force_cpu=False, on_partial=None):
     if interlaced not in ("auto", "off", "tff", "bff"):
         raise ValueError("Unbekannte Halbbildreihenfolge.")
     settings = detection_settings(sensitivity) | {"max_gap": max_gap,
-        "scene_guard": scene_guard, "interlaced": interlaced, "preserve_overlays": preserve_overlays,
+        "scene_guard": scene_guard, "interlaced": interlaced, "preserve_overlays": False,
         "color_stabilize": color_stabilize, "force_cpu": force_cpu}
     path = str(Path(path).resolve())
     original_signature = signature(path)
@@ -890,12 +890,9 @@ class Renderer:
             [float(f.duration * f.time_base) for f in pending], float(t1 - t0),
             [left[p::2].copy() for p in (0, 1)] if field_order != "off" else None,
             [right[p::2].copy() for p in (0, 1)] if field_order != "off" else None)
-        overlays = gap.overlays if gap.overlays is not None else self.settings.get("preserve_overlays", True)
         output = []
         for original, image in zip(pending, pixels):
             rgb = frame_rgb(original, field_order)
-            if overlays:
-                image = preserve_title(rgb, image, self.settings.get("pixel_threshold", 12))
             for parity in intact_fields(original, self.settings):
                 image[parity::2] = rgb[parity::2]
             output.append(image)
@@ -1071,17 +1068,6 @@ def export_control_clips(result, output, progress=lambda p, s: None, cancel=lamb
     except BaseException:
         shutil.rmtree(directory)
         raise
-
-
-def preserve_title(original, reconstructed, threshold):
-    """Composite a bright overlay from black onto the reconstructed background."""
-    maximum = media.maximum(original)
-    mask = cv2.cvtColor(original, cv2.COLOR_RGB2GRAY) > threshold * (maximum / 255)
-    alpha = original.max(axis=2, keepdims=True).astype(np.float32) / maximum
-    composite = np.clip(original.astype(np.float32) + reconstructed.astype(np.float32) * (1 - alpha), 0, maximum)
-    out = reconstructed.copy()
-    out[mask] = np.rint(composite[mask]).astype(original.dtype)
-    return out
 
 
 def same_pixels(a, b):

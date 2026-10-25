@@ -1,6 +1,23 @@
-# Video Repair RIFE 8 – Fortsetzen, Deutsch/Englisch und 10 Bit
+# Video Repair RIFE 9 – Fortsetzen, Deutsch/Englisch und 10 Bit
 
-## Neu in V8
+## Neu in V9
+
+- **ProRes/MOV ist vorausgewählt**, auch für 8-Bit-Quellen.
+- **Gesamtdatei nach Prüfclips automatisch erstellen** ist standardmäßig aktiv.
+  Nach „Alle Prüfclips rendern“ läuft der Gesamtexport ohne Rückfrage weiter.
+  Bei ausgeschaltetem Schalter erscheint die bisherige Ja/Nein-Abfrage.
+- **Titel erhalten** und die Einstellung pro Stelle sind entfernt. Titel über
+  Schwarz werden unverändert erkannt; die gesamte beschädigte Stelle wird mit
+  der gewählten Methode rekonstruiert. Alte Titel-Einstellungen werden ignoriert.
+  Alte Reparaturen mit aktivierter Titelübernahme werden nicht wiederverwendet.
+- Alte MKV-Standardauswahlen aus V8 werden einmalig auf ProRes umgestellt. Eine
+  danach in V9 ausdrücklich gespeicherte MKV-Auswahl bleibt erhalten.
+
+Über Nacht: laden → scannen → Plan/Einstellungen prüfen → Automatik aktiv lassen
+→ **Alle Prüfclips rendern**. Das Laden allein startet weiterhin nichts.
+Einzelne Punkte werden weiterhin separat gerendert.
+
+## Beibehalten aus V8
 
 **Fortsetzen:** dieselbe unveränderte Quelldatei und denselben Zielordner verwenden.
 Nach einem Programmneustart lädt die Dateiauswahl nur das Projekt; **Fortsetzen**
@@ -43,7 +60,7 @@ Maximale Lücke: 1–12 Frames oder 0,25 / 0,5 / 1 / 1,5 / 2 Sekunden, standardm
 2 Sekunden. Lange Lücken benötigen mehr Zeit und Speicher und können deutliche
 KI-Artefakte enthalten. Immer zunächst den Prüfclip kontrollieren.
 
-![V8 auf Deutsch mit einem synthetischen 10-Bit-Testclip](Bilder/Oberflaeche.png)
+![V9 auf Deutsch mit einem synthetischen 10-Bit-Testclip](Bilder/Oberflaeche.png)
 
 Ansicht aus der Linux-Qt-Prüfung; die native Mac-Darstellung kann abweichen.
 English documentation: [README_EN.md](README_EN.md).
@@ -56,7 +73,7 @@ English documentation: [README_EN.md](README_EN.md).
   falsch markierte Quellen können manuell übersteuert werden.
 3. Ereignis auswählen und im Originalclip mit Slider, Bildtasten oder Wiedergabe
   prüfen. Das lädt keine RIFE-Berechnung.
-4. Typ, Entscheidung, Methode und Titelübernahme ändern. **L** setzt eine Lücke
+4. Typ, Entscheidung, Methode und Framebereich ändern. **L** setzt eine Lücke
   auch an einem erkannten Schnitt. Ein normaler Schnitt hat zunächst 0 fehlende
   Frames; L wählt zuerst 1 Frame. **Von/Bis** sind Frameindizes ab 0. **Start/Ende
   ← Bild** übernehmen die Vorschauposition. Überschneidende Reparaturen sind gesperrt.
@@ -64,8 +81,8 @@ English documentation: [README_EN.md](README_EN.md).
   Das gespeicherte Ergebnis wird rechts angezeigt. Prüfclips enthalten keinen Ton.
 6. **Alle Prüfclips rendern** arbeitet die vorgemerkten Korrekturen ab. Fertige
   Clips bleiben anklickbar. Balken zeigen Warteschlange und aktuellen Prüfclip.
-7. **Gesamtdatei erstellen** berechnet zuerst fehlende passende Prüfclips, fragt
-  danach nach Bestätigung und übernimmt deren Reparaturbilder ohne zweite Inferenz.
+7. **Gesamtdatei erstellen** berechnet zuerst fehlende passende Prüfclips, übernimmt
+  bei aktiver Automatik ohne Rückfrage deren Reparaturbilder ohne zweite Inferenz.
 
 Die Warteschlange nutzt die Einstellungen beim Start. Spätere Änderungen werden
 als **Plan geändert** markiert. Bei Abbruch bleiben fertige Clips und Entscheidungen
@@ -153,7 +170,7 @@ inhaltlich unverändert, ihre Zeitstempel können dabei um weniger als 1 ms rund
 
 ZIP entpacken, **Installieren.command** öffnen. macOS 14+, Python 3.12 (3.11 möglich),
 einmalig Internet zum Laden der Pakete. Python: https://www.python.org/downloads/macos/
-Installationsziel: `~/Applications/Video Repair RIFE 8.app`. Installer, Quellcode und
+Installationsziel: `~/Applications/Video Repair RIFE 9.app`. Installer, Quellcode und
 Modell enthalten; keine vorkompilierte/notarisierte Mac-App. Ältere Apps bleiben
 erhalten. Mac-Build und Apple-GPU wurden hier nicht geprüft.
 

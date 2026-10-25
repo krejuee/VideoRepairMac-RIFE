@@ -7,6 +7,12 @@ _language = 'de'
 _translator = None
 # Full labels plus reusable phrases for live progress and event descriptions.
 CATALOG = {
+'Video Repair RIFE 9 · Lücken bis 2 Sekunden':'Video Repair RIFE 9 · Gaps up to 2 seconds',
+'Verlustfreier Master · FFV1/MKV':'Lossless master · FFV1/MKV',
+'Gesamtdatei nach Prüfclips automatisch erstellen':'Automatically create complete file after review clips',
+'Aktiv: nach allen Prüfclips ohne Rückfrage exportieren. Aus: vorher nachfragen.':'On: export after all review clips without asking. Off: ask first.',
+'Prüfclips gespeichert. Gesamtdatei wird automatisch erstellt.':'Review clips saved. Creating the complete file automatically.',
+
 'Deutsch':'Deutsch', 'English':'English',
 'Video Repair RIFE 8 · Lücken bis 2 Sekunden':'Video Repair RIFE 8 · Gaps up to 2 seconds',
 '↓\n\nVideo hier hineinziehen\noder klicken, um eine Datei auszuwählen':'↓\n\nDrop a video here\nor click to select a file',

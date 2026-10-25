@@ -1,5 +1,15 @@
 # Versionsübersicht
 
+## Version 9 – 25.10.2026
+
+- Titelübernahme aus Oberfläche und Reparatur entfernt; Titelerkennung unverändert.
+- Alte Titel-Flags ignorieren; keine Wiederverwendung von Titel-Compositing-Patches.
+- Standardmäßig aktiver Automatikschalter für den Gesamtexport nach allen Prüfclips.
+  Nur bei ausgeschaltetem Schalter vor der Gesamtdatei nachfragen.
+- ProRes/MOV als Standard; alte MKV-Voreinstellungen einmalig migrieren.
+- V9-Paket direkt aus aktuellem Quellcode und geprüftem Modell erstellen.
+
+
 ## Repository-Aktualisierung – 17.10.2026
 
 - Version 8 aus dem vom Projektverantwortlichen bereitgestellten ZIP übernommen.

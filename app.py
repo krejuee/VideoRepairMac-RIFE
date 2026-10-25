@@ -27,7 +27,7 @@ class Worker(QThread):
     failed = Signal(str)
     cancelled = Signal()
 
-    def __init__(self, path, directory, auto, mode, max_gap, result=None, settings=None, export="lossless", clips=False, artifacts=None):
+    def __init__(self, path, directory, auto, mode, max_gap, result=None, settings=None, export="prores", clips=False, artifacts=None):
         super().__init__()
         self.path, self.directory, self.auto = path, directory, auto
         self.mode, self.max_gap, self.result = mode, max_gap, result
@@ -167,7 +167,7 @@ class Window(QMainWindow):
         self.refresh_timer.setSingleShot(True)
         self.refresh_timer.timeout.connect(self.refresh_list)
         self.path, self.directory = "", ""
-        self.setWindowTitle(i18n.t("Video Repair RIFE 8 · Lücken bis 2 Sekunden"))
+        self.setWindowTitle(i18n.t("Video Repair RIFE 9 · Lücken bis 2 Sekunden"))
         self.resize(1400, 860)
         root = QWidget()
         self.setCentralWidget(root)
@@ -232,10 +232,7 @@ class Window(QMainWindow):
         guard_row = QHBoxLayout()
         self.scene_guard = QCheckBox("Szenen und Blenden prüfen")
         self.scene_guard.setChecked(True)
-        self.preserve_overlays = QCheckBox("Titel über Schwarz erhalten")
-        self.preserve_overlays.setChecked(True)
         guard_row.addWidget(self.scene_guard)
-        guard_row.addWidget(self.preserve_overlays)
         guard_row.addStretch()
         layout.addLayout(guard_row)
         colors = QHBoxLayout()
@@ -276,12 +273,17 @@ class Window(QMainWindow):
         export_row = QHBoxLayout()
         export_row.addWidget(QLabel("Export"))
         self.export = QComboBox()
-        self.export.addItem("Verlustfreier Master · FFV1/MKV (z. B. VLC)", "lossless")
-        self.export.addItem("Hochwertiges MOV · H.264 8 Bit / ProRes 10 Bit", "compatible")
         self.export.addItem("ProRes MOV · 10 Bit", "prores")
+        self.export.addItem("Verlustfreier Master · FFV1/MKV", "lossless")
+        self.export.addItem("Hochwertiges MOV · H.264 8 Bit / ProRes 10 Bit", "compatible")
         self.export.addItem("MXF · XDCAM HD422 · 50 Mbit/s", "mxf")
         export_row.addWidget(self.export, 1)
         layout.addLayout(export_row)
+        self.auto_master = QCheckBox("Gesamtdatei nach Prüfclips automatisch erstellen")
+        self.auto_master.setChecked(True)
+        self.auto_master.setToolTip("Aktiv: nach allen Prüfclips ohne Rückfrage exportieren. Aus: vorher nachfragen.")
+        self.auto_master.toggled.connect(self.save_review_decisions)
+        left_panel_layout.addWidget(self.auto_master)
         clip_note = QLabel("Prüfclips zuerst · ihre Reparaturbilder werden in die Gesamtdatei übernommen.")
         clip_note.setWordWrap(True)
         layout.addWidget(clip_note)
@@ -366,7 +368,7 @@ class Window(QMainWindow):
         self.sensitivity.valueChanged.connect(self.update_sensitivity)
         for control in (self.max_gap, self.interlaced):
             control.currentIndexChanged.connect(self.invalidate_scan)
-        for control in (self.scene_guard, self.preserve_overlays, self.color_stabilize, self.force_cpu):
+        for control in (self.scene_guard, self.color_stabilize, self.force_cpu):
             control.toggled.connect(self.invalidate_scan)
         self.mode.currentIndexChanged.connect(self.invalidate_comparison)
         self.export.currentIndexChanged.connect(self.invalidate_comparison)
@@ -444,14 +446,6 @@ class Window(QMainWindow):
         row.addWidget(self.event_mode, 1)
         layout.addLayout(row)
         row = QHBoxLayout()
-        row.addWidget(QLabel("Titel hier"))
-        self.event_overlays = QComboBox()
-        for label, value in (("Globale Einstellung", None), ("Erhalten", True), ("Nicht übernehmen", False)):
-            self.event_overlays.addItem(label, value)
-        self.event_overlays.currentIndexChanged.connect(self.edit_event)
-        row.addWidget(self.event_overlays, 1)
-        layout.addLayout(row)
-        row = QHBoxLayout()
         self.preview_button = QPushButton("Punkt rendern · Enter")
         self.preview_button.setObjectName("primary")
         self.preview_button.clicked.connect(self.render_selected)
@@ -522,7 +516,7 @@ class Window(QMainWindow):
     def enable_review(self, enabled):
         gap = self.current_gap()
         active = enabled and gap is not None
-        for widget in (self.event_type, self.decision, self.event_mode, self.event_overlays, self.range_start, self.range_end):
+        for widget in (self.event_type, self.decision, self.event_mode, self.range_start, self.range_end):
             widget.setEnabled(active)
         for widget in (self.mark_start, self.mark_end):
             widget.setEnabled(active and self.preview_data is not None)
@@ -558,8 +552,6 @@ class Window(QMainWindow):
             self.event_mode.setCurrentIndex(self.event_mode.findData(gap.mode))
             for index in range(self.event_mode.count()):
                 self.event_mode.model().item(index).setEnabled(gap.effective_kind != "cut_gap" or self.event_mode.itemData(index) in ("global", "motion", "hold"))
-            # QVariant bool/int equality must not confuse False with the None default.
-            self.event_overlays.setCurrentIndex(0 if gap.overlays is None else 1 if gap.overlays else 2)
             self.loading_event = False
             key = self.preview_key()
             if self.preview_data is not None and self.loaded_preview_key == key:
@@ -607,7 +599,6 @@ class Window(QMainWindow):
             QMessageBox.warning(self, "Einzelentscheidung", str(exc))
             return
         gap.mode = self.event_mode.currentData()
-        gap.overlays = self.event_overlays.currentData()
         self.invalidate_comparison()
         self.populate(self.result, gap.identity)
         self.save_review_decisions()
@@ -781,7 +772,7 @@ class Window(QMainWindow):
 
     def settings(self):
         return {"sensitivity": self.sensitivity.value(), "scene_guard": self.scene_guard.isChecked(),
-                "interlaced": self.interlaced.currentData(), "preserve_overlays": self.preserve_overlays.isChecked(),
+                "interlaced": self.interlaced.currentData(), "preserve_overlays": False,
                 "color_stabilize": self.color_stabilize.isChecked(), "force_cpu": self.force_cpu.isChecked()}
 
     def refresh_list(self):
@@ -805,7 +796,7 @@ class Window(QMainWindow):
 
     def change_language(self):
         i18n.set_language(self.language.currentData())
-        self.setWindowTitle(i18n.t("Video Repair RIFE 8 · Lücken bis 2 Sekunden"))
+        self.setWindowTitle(i18n.t("Video Repair RIFE 9 · Lücken bis 2 Sekunden"))
 
     def directory_key(self):
         import hashlib
@@ -824,10 +815,12 @@ class Window(QMainWindow):
                       (self.max_gap, settings.get("max_gap_selection")),
                       (self.interlaced, settings.get("interlaced_requested", settings.get("interlaced"))))
             for combo, value in values:
+                if combo is self.export and value == "lossless" and prefs.get("preferences_version", 8) < 9:
+                    value = "prores"
                 index = combo.findData(value)
                 if index >= 0:
                     combo.blockSignals(True); combo.setCurrentIndex(index); combo.blockSignals(False)
-            for control, key in ((self.scene_guard, "scene_guard"), (self.preserve_overlays, "preserve_overlays"),
+            for control, key in ((self.scene_guard, "scene_guard"), (self.auto_master, "auto_master"),
                                  (self.color_stabilize, "color_stabilize"), (self.force_cpu, "force_cpu")):
                 if key in settings:
                     control.blockSignals(True); control.setChecked(settings[key]); control.blockSignals(False)
@@ -928,7 +921,7 @@ class Window(QMainWindow):
         if "master" in self.jobs:
             self.stop_playback()
         for widget in [self.drop, self.mode, self.max_gap, self.folder, self.sensitivity,
-                       self.scene_guard, self.preserve_overlays, self.interlaced, self.export,
+                       self.scene_guard, self.auto_master, self.interlaced, self.export,
                        self.color_stabilize, self.force_cpu]:
             widget.setEnabled(not busy)
         self.sensitivity.setEnabled("master" not in self.jobs)
@@ -999,6 +992,7 @@ class Window(QMainWindow):
     def save_review_decisions(self):
         if self.result:
             try:
+                self.result.settings["auto_master"] = self.auto_master.isChecked()
                 review.save_decisions(self.result, self.output_directory())
                 review.save_preferences(self.result, self.output_directory(), self.mode.currentData(), self.export.currentData())
                 self.remember_directory()
@@ -1077,7 +1071,8 @@ class Window(QMainWindow):
 
     def clip_job_complete(self, ask):
         self.ask_after_render = ask
-        self.status.setText("Prüfclips gespeichert. Auswählen und begutachten; Gesamtdatei wird separat bestätigt.")
+        self.status.setText("Prüfclips gespeichert. Gesamtdatei wird automatisch erstellt." if ask and self.auto_master.isChecked()
+                            else "Prüfclips gespeichert. Auswählen und begutachten; Gesamtdatei wird separat bestätigt.")
 
     def offer_master(self):
         if not self.result or self.result.partial or ({"render", "master", "scan"} & self.jobs):
@@ -1199,11 +1194,13 @@ class Window(QMainWindow):
             if missing:
                 self.start_clip_job(missing, True)
                 return
-            response = QMessageBox.question(self, "Gesamtdatei erstellen?",
-                "Jetzt die vollständige Datei mit dem aktuellen Reparaturplan erstellen?\n"
-                "Bereits gespeicherte Prüfclips bleiben unabhängig davon erhalten.",
-                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-            if response == QMessageBox.Yes:
+            proceed = self.auto_master.isChecked()
+            if not proceed:
+                proceed = QMessageBox.question(self, "Gesamtdatei erstellen?",
+                    "Jetzt die vollständige Datei mit dem aktuellen Reparaturplan erstellen?\n"
+                    "Bereits gespeicherte Prüfclips bleiben unabhängig davon erhalten.",
+                    QMessageBox.Yes | QMessageBox.No, QMessageBox.No) == QMessageBox.Yes
+            if proceed:
                 self.save_review_decisions()
                 self.launch(True, review.frozen(self.result))
 

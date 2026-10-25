@@ -40,16 +40,16 @@ fi
 .venv/bin/python -m pip install --only-binary=:all: -r requirements.txt
 .venv/bin/python -c 'from rife_backend import Rife; Rife(); print("RIFE-Modell geprüft.")'
 .venv/bin/python -m PyInstaller --noconfirm --clean --windowed --onedir \
-    --name "Video Repair RIFE 8" --osx-bundle-identifier "local.videorepair.rife8.mac" \
+    --name "Video Repair RIFE 9" --osx-bundle-identifier "local.videorepair.rife9.mac" \
     --add-data "models:models" --add-data "vendor_rife/LICENSE:licenses" \
     --collect-all av --collect-all cv2 --collect-all torch --exclude-module PySide6.QtWebEngineCore \
     --exclude-module PySide6.QtWebEngineWidgets app.py
 DEST="$HOME/Applications"
 mkdir -p "$DEST"
-APP="$DEST/Video Repair RIFE 8.app"
+APP="$DEST/Video Repair RIFE 9.app"
 if [ -e "$APP" ]; then
-    APP="$DEST/Video Repair RIFE 8 $(date +%Y%m%d-%H%M%S).app"
+    APP="$DEST/Video Repair RIFE 9 $(date +%Y%m%d-%H%M%S).app"
 fi
-ditto "dist/Video Repair RIFE 8.app" "$APP"
+ditto "dist/Video Repair RIFE 9.app" "$APP"
 echo "Fertig: $APP"
 open "$APP"

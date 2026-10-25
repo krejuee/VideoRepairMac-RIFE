@@ -1,9 +1,24 @@
-# Video Repair RIFE 8
+# Video Repair RIFE 9
 
 Repair short black gaps in 8-bit and 10-bit SDR video. German and English UI;
 local processing with the included Practical-RIFE 4.25 model.
 
 ![English interface with a synthetic test clip](Bilder/Interface_English.png)
+
+## New in V9
+
+**ProRes/MOV is the default export**, including for 8-bit input. The removed
+"Preserve titles" feature no longer composites damaged pixels into repairs;
+detection of titles over black stays unchanged. Saved V8 title flags are ignored.
+Patches produced with title compositing are not reused.
+
+**Automatically create complete file after review clips** is enabled by default.
+For overnight processing: load → scan → check settings/plan → leave the switch
+on → **Render all review clips**. A single selected-event render stays separate.
+Switch it off for the previous Yes/No confirmation. Matching clips and export
+parts are reused. V8 MKV preferences migrate once to ProRes; explicit V9 choices
+remain saved. MKV remains optional; its reported playback problem has not been
+conclusively diagnosed.
 
 ## Workflow
 
@@ -11,14 +26,15 @@ local processing with the included Practical-RIFE 4.25 model.
 2. Press **Scan**. The growing event list remains interactive. Sensitivity and the
    maximum gap length update cached results without another scan.
 3. Select an event to inspect the original, step through frames or play it.
-   Choose its type, repair decision, method, title handling and frame range.
+   Choose its type, repair decision, method and frame range.
 4. Press **Render event / Enter**. The original and repaired review clips, plus a
    lossless native repair patch, are saved first. Review clips are silent, with
    about a second of context on each side. Inspect the saved result on the right.
 5. **Render all review clips** processes the planned repairs. Completed events
    stay available for review while the next event is rendering.
 6. **Create complete file** reuses matching repair patches. Missing repairs are
-   rendered first; a separate confirmation starts the complete export.
+   rendered first. The default-enabled automatic complete-file switch starts
+   the final export without a dialog. Turn it off to be asked first.
 
 Ordinary cuts have no missing frames. **L** sets a repair range there, initially
 one frame. Use From/To (zero based) or Start/End ← Frame to adjust it. Overlapping
@@ -105,7 +121,7 @@ VANC, subtitles and chapters are not copied; full MXF metadata is not bit-identi
 
 Extract the ZIP and open **Installieren.command** on macOS 14+, with Python 3.12
 (or 3.11) installed. Dependencies download once. The installer builds
-`~/Applications/Video Repair RIFE 8.app`; older apps remain available. Source,
+`~/Applications/Video Repair RIFE 9.app`; older apps remain available. Source,
 model and installer are included; this is not a prebuilt/notarised Mac app.
 
 From a Git checkout, run `python scripts/prepare_package.py` first to assemble

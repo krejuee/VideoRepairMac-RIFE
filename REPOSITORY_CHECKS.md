@@ -1,3 +1,13 @@
+# Prüfung der V9-Aktualisierung
+
+Prüfumfang und Grenzen der aktuellen Version: [PRUEFUNG.md](PRUEFUNG.md).
+V9 wird aus dem aktuellen Quellcode gebaut. Das alte V8-Archiv dient im
+Git-Checkout als unveränderte Quelle des bereits geprüften RIFE-Modells.
+
+---
+
+## Historischer V8-Importbericht
+
 # Prüfung des Repository-Imports – 17.10.2026
 
 Der bereitgestellte V8-Quellstand wurde unter Linux/Python 3.12 mit PyAV 16.1,

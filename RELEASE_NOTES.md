@@ -1,14 +1,12 @@
-# Video Repair RIFE 8
+# Video Repair RIFE 9
 
-- Lücken bis zwei Sekunden; Original-/Reparaturvorschau und manuelle Entscheidungen.
-- Passende Reparatur-Patches wiederverwenden, Gesamtexport nach Abbruch fortsetzen.
-- Deutsche und englische Oberfläche.
-- 8-/10-Bit-SDR, FFV1/MKV und ProRes/MOV; XDCAM HD422/MXF bleibt 8 Bit.
-- Automatische TFF/BFF-Erkennung, Timecode und unterstützte Metadaten.
+- „Titel erhalten“ entfernt; die Erkennung schwarzer Lücken mit Titel bleibt erhalten.
+- Gesamtdatei nach allen Prüfclips automatisch erzeugen: standardmäßig aktiv,
+  ohne Rückfrage. Bei ausgeschaltetem Schalter wird vorher gefragt.
+- ProRes/MOV als Standardexport für 8-/10-Bit-SDR. MKV bleibt optional.
+- Passende Reparaturen und Exportabschnitte weiterverwenden. Alte Titel-Composites
+  werden gezielt neu berechnet; das MKV-Wiedergabeproblem bleibt ungeklärt.
 
-ZIP entpacken und Installieren.command öffnen. Benötigt macOS 14+ und Python
-3.11/3.12. Kein vorgebautes/notarisiertes App-Bundle. Mac-Build und Apple-GPU
-wurden hier nicht getestet. Anleitung und Bilder sind im Paket enthalten.
-
-Die 72 automatisierten Tests wurden beim Repository-Import am 17.10.2026
-unter Linux/CPU erneut erfolgreich ausgeführt.
+Über Nacht: laden → scannen → einstellen → Automatik aktiv lassen → alle Prüfclips rendern.
+ZIP entpacken und Installieren.command öffnen (macOS 14+, Python 3.11/3.12).
+Mac-Build, MPS und Adobe Media Encoder wurden hier nicht ausgeführt.

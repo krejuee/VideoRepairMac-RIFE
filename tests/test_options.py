@@ -14,7 +14,7 @@ import engine
 from test_engine import audio_info, fixture
 
 
-def title_fixture(path, length=12):
+def title_fixture(path, length=12, only_gap=False):
     with av.open(str(path), "w") as out:
         s = out.add_stream("libx264", rate=25)
         s.width, s.height, s.pix_fmt = 160, 96, "yuv420p"
@@ -24,7 +24,8 @@ def title_fixture(path, length=12):
             image[20:40, 30:50] = 170
             if 15 <= i < 15 + length:
                 image[...] = 0
-            image[70:80, 30:130] = 255  # title occupies about 6.5 percent
+            if not only_gap or 15 <= i < 15 + length:
+                image[70:80, 30:130] = 255  # title occupies about 6.5 percent
             f = av.VideoFrame.from_ndarray(image, format="rgb24")
             f.pts, f.time_base = i, Fraction(1, 25)
             out.mux(s.encode(f))
